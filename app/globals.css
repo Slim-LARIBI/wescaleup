@@ -1,0 +1,160 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --scroll-behavior: smooth;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-surface-warm text-ink;
+  }
+
+  /* Premium selection highlight */
+  ::selection {
+    @apply bg-brand-blue-mid text-brand-blue-deeper;
+  }
+
+  /* Smooth focus ring */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-brand-blue ring-offset-2;
+  }
+}
+
+@layer components {
+  .container-site {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-narrow {
+    @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-pad {
+    @apply py-24 lg:py-32;
+  }
+
+  .section-pad-sm {
+    @apply py-16 lg:py-20;
+  }
+
+  /* Premium card */
+  .card {
+    @apply bg-white rounded-2xl border border-surface-border shadow-card;
+  }
+
+  .card-hover {
+    @apply card transition-all duration-300 ease-premium hover:shadow-card-hover hover:-translate-y-0.5;
+  }
+
+  /* Gradient text */
+  .text-gradient-brand {
+    @apply bg-gradient-brand bg-clip-text text-transparent;
+  }
+
+  .text-gradient-warm {
+    @apply bg-gradient-warm bg-clip-text text-transparent;
+  }
+
+  /* Divider */
+  .divider {
+    @apply h-px bg-surface-border;
+  }
+
+  /* Tag/Badge */
+  .tag {
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide uppercase;
+  }
+
+  .tag-blue {
+    @apply tag bg-brand-blue-light text-brand-blue border border-brand-blue-mid/40;
+  }
+
+  .tag-orange {
+    @apply tag bg-brand-orange-light text-brand-orange border border-brand-orange-mid/40;
+  }
+
+  /* Number highlight */
+  .stat-number {
+    @apply text-4xl lg:text-5xl font-bold tracking-tight text-ink;
+  }
+}
+
+@layer utilities {
+  /* Gradient mesh backgrounds */
+  .bg-hero-mesh {
+    background-color: #FAFAF8;
+    background-image:
+      radial-gradient(ellipse 90% 70% at 60% -5%, rgba(37, 99, 235, 0.07) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 50% at 0% 100%, rgba(234, 88, 12, 0.05) 0%, transparent 60%),
+      radial-gradient(circle at 85% 80%, rgba(124, 58, 237, 0.04) 0%, transparent 40%);
+  }
+
+  .bg-subtle-dots {
+    background-image: radial-gradient(circle, #CBD5E1 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  .bg-cta-mesh {
+    background-color: #1E3A8A;
+    background-image:
+      radial-gradient(ellipse 70% 60% at 30% 30%, rgba(99, 102, 241, 0.35) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 50% at 80% 80%, rgba(37, 99, 235, 0.4) 0%, transparent 60%);
+  }
+
+  /* Text balance */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Smooth underline animation */
+  .underline-hover {
+    @apply relative;
+  }
+  .underline-hover::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-0.5 bg-brand-blue transition-all duration-300 ease-premium;
+  }
+  .underline-hover:hover::after {
+    @apply w-full;
+  }
+
+  /* Number gradient */
+  .number-badge {
+    @apply w-10 h-10 rounded-full bg-gradient-brand flex items-center justify-center text-white text-sm font-bold flex-shrink-0;
+  }
+
+  /* Icon container */
+  .icon-box {
+    @apply w-12 h-12 rounded-xl flex items-center justify-center;
+  }
+  .icon-box-blue {
+    @apply icon-box bg-brand-blue-light text-brand-blue;
+  }
+  .icon-box-orange {
+    @apply icon-box bg-brand-orange-light text-brand-orange;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F3F2EE;
+}
+::-webkit-scrollbar-thumb {
+  background: #D1CFC6;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9CA3AF;
+}

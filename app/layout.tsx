@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans, Inter } from 'next/font/google'
 import './globals.css'
 import { Navbar } from '@/components/layout/Navbar'
+import { FloatingCTA } from '@/components/layout/FloatingCTA'
 import { Footer } from '@/components/layout/Footer'
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -19,16 +20,18 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://wescaleup.tech'),
   title: {
-    default: 'Wescaleup — Engineered Growth for Ambitious Brands',
+    default: 'Wescaleup — Growth systems, not just campaigns',
     template: '%s | Wescaleup',
   },
   description:
-    'Wescaleup is a data-driven growth agency combining performance marketing, advanced tracking, marketing automation, and analytics into scalable systems that grow your business.',
+    'Wescaleup is a data-driven growth agency combining performance marketing, advanced tracking, analytics, technical SEO, and automation into scalable systems that grow your business.',
   keywords: [
     'growth agency',
     'performance marketing',
     'SEO agency',
+    'technical SEO',
     'Google Ads',
     'Meta Ads',
     'server-side tracking',
@@ -37,21 +40,37 @@ export const metadata: Metadata = {
     'marketing automation',
     'web analytics',
     'conversion optimization',
+    'n8n automation',
+    'data-driven agency',
   ],
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://wescaleup.com',
+    url: 'https://wescaleup.tech',
     siteName: 'Wescaleup',
-    title: 'Wescaleup — Engineered Growth for Ambitious Brands',
+    title: 'Wescaleup — Growth systems, not just campaigns',
     description:
-      'We build performance systems that combine advanced tracking, data-driven acquisition, and intelligent automation — so your growth is reliable, scalable, and measurable.',
+      'We build advanced tracking, analytics, paid media, technical SEO, and automation systems for ambitious brands.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Wescaleup — Growth systems, not just campaigns',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Wescaleup — Engineered Growth for Ambitious Brands',
+    title: 'Wescaleup — Growth systems, not just campaigns',
     description:
-      'Performance marketing, advanced tracking, analytics and automation built into scalable growth systems.',
+      'Advanced tracking, analytics, paid media, technical SEO, and automation systems built for measurable growth.',
+    images: ['/og-image.png'],
   },
   robots: {
     index: true,
@@ -70,6 +89,7 @@ export default function RootLayout({
         <Navbar />
         <main>{children}</main>
         <Footer />
+        <FloatingCTA />
       </body>
     </html>
   )

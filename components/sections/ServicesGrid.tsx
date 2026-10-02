@@ -93,7 +93,7 @@ export function ServicesGrid() {
             return (
               <StaggerItem key={service.id}>
                 <Link
-                  href={`/services#${service.id}`}
+                  href={service.href}
                   className="group card-hover flex flex-col h-full p-7 transition-all duration-300"
                 >
                   {/* Icon */}

@@ -18,6 +18,7 @@ import { FadeIn } from '@/components/ui/FadeIn'
 import { SectionLabel } from '@/components/ui/SectionLabel'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/services/automation' },
   title: 'Marketing Automation — n8n, Make, Apps Script & Operational Workflows',
   description:
     'Advanced automation systems using n8n, Make, Google Apps Script, APIs, webhooks, CRM routing, dashboards, alerts, and operational workflows built for scale.',

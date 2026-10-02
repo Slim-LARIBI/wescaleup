@@ -20,58 +20,41 @@ export function Process() {
           />
         </FadeIn>
 
-        {/* Desktop: horizontal steps */}
-        <div className="hidden lg:block">
-          <StaggerChildren
-            className="grid grid-cols-5 gap-4 relative"
-            staggerDelay={0.1}
-          >
-            {/* Connecting line */}
-            <div
-              className="absolute top-8 left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-brand-blue-mid via-brand-blue to-violet-400 opacity-30"
-              aria-hidden
-            />
+        {/* Steps: vertical cards on mobile, 5 horizontal columns on desktop */}
+        <StaggerChildren
+          className="relative grid grid-cols-1 lg:grid-cols-5 gap-4"
+          staggerDelay={0.1}
+        >
+          {/* Connecting line (desktop only) */}
+          <div
+            className="hidden lg:block absolute top-8 left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-brand-blue-mid via-brand-blue to-violet-400 opacity-30"
+            aria-hidden
+          />
 
-            {processSteps.map((step) => (
-              <StaggerItem key={step.number}>
-                <div className="relative flex flex-col items-center text-center group">
+          {processSteps.map((step, i) => (
+            <StaggerItem key={step.number}>
+              <div className="card p-6 lg:p-0 lg:bg-transparent lg:border-0 lg:shadow-none lg:rounded-none group">
+                <div className="flex items-start gap-5 lg:relative lg:flex-col lg:items-center lg:gap-0 lg:text-center">
                   {/* Number circle */}
-                  <div className="w-16 h-16 rounded-full bg-white border-2 border-brand-blue-mid/30 flex items-center justify-center mb-6 shadow-card group-hover:border-brand-blue group-hover:shadow-card-hover transition-all duration-300 relative z-10">
-                    <span className="font-display font-bold text-brand-blue text-lg">
+                  <div className="w-12 h-12 lg:w-16 lg:h-16 rounded-full bg-gradient-brand shadow-button lg:bg-none lg:bg-white lg:border-2 lg:border-brand-blue-mid/30 lg:shadow-card lg:mb-6 lg:group-hover:border-brand-blue lg:group-hover:shadow-card-hover flex items-center justify-center flex-shrink-0 transition-all duration-300 relative z-10">
+                    <span className="font-bold text-white text-sm lg:font-display lg:text-brand-blue lg:text-lg">
                       {step.number}
                     </span>
                   </div>
-                  <h3 className="font-display font-bold text-ink text-sm mb-3">{step.title}</h3>
-                  <p className="text-ink-muted text-xs leading-relaxed">{step.description}</p>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerChildren>
-        </div>
-
-        {/* Mobile: vertical steps */}
-        <div className="lg:hidden space-y-4">
-          {processSteps.map((step, i) => (
-            <FadeIn key={step.number} delay={i * 0.08}>
-              <div className="card p-6">
-                <div className="flex items-start gap-5">
-                  <div className="w-12 h-12 rounded-full bg-gradient-brand flex items-center justify-center flex-shrink-0 shadow-button">
-                    <span className="text-white font-bold text-sm">{step.number}</span>
-                  </div>
                   <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <h3 className="font-display font-bold text-ink text-base">{step.title}</h3>
+                    <div className="flex items-center gap-2 mb-2 lg:mb-3 lg:justify-center">
+                      <h3 className="font-display font-bold text-ink text-base lg:text-sm">{step.title}</h3>
                       {i < processSteps.length - 1 && (
-                        <ArrowRight size={14} className="text-ink-light" />
+                        <ArrowRight size={14} className="text-ink-light lg:hidden" />
                       )}
                     </div>
-                    <p className="text-ink-muted text-sm leading-relaxed">{step.description}</p>
+                    <p className="text-ink-muted text-sm lg:text-xs leading-relaxed">{step.description}</p>
                   </div>
                 </div>
               </div>
-            </FadeIn>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerChildren>
 
         {/* Bottom trust note */}
         <FadeIn delay={0.3} className="mt-14">

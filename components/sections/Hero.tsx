@@ -120,8 +120,8 @@ export function Hero() {
                 letterSpacing: '-0.055em',
               }}
             >
-              We build
-              <span className="block">growth systems.</span>
+              We build{' '}
+              <span className="block">growth systems.</span>{' '}
               <span className="block text-gradient-brand">Not just campaigns.</span>
             </motion.h1>
 

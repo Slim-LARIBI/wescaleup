@@ -1,17 +1,13 @@
 import Link from 'next/link'
-import { ArrowRight, Mail, MapPin, Linkedin, Twitter } from 'lucide-react'
+import { ArrowRight, Mail, MapPin, Linkedin } from 'lucide-react'
 
 const services = [
-  { label: 'SEO & Technical SEO', href: '/services#seo' },
-  { label: 'Google Ads', href: '/services#google-ads' },
-  { label: 'Meta Ads', href: '/services#meta-ads' },
-  { label: 'Web Analytics & GA4', href: '/services#analytics' },
-  { label: 'Advanced Tracking', href: '/services#tracking' },
-  { label: 'Server-Side Tracking', href: '/services#server-side' },
-  { label: 'Marketing Automation', href: '/services#automation' },
-  { label: 'Email Automation', href: '/services#email' },
-  { label: 'Dashboards & Reporting', href: '/services#dashboards' },
-  { label: 'CRO', href: '/services#cro' },
+  { label: 'Meta Ads', href: '/services/meta-ads' },
+  { label: 'SEA / Google Ads', href: '/services/sea' },
+  { label: 'SEO', href: '/services/seo' },
+  { label: 'Analytics & Tracking', href: '/services/analytics' },
+  { label: 'Marketing Automation', href: '/services/automation' },
+  { label: 'Custom SaaS', href: '/services/custom-saas' },
 ]
 
 const company = [
@@ -45,8 +41,8 @@ export function Footer() {
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-sm text-ink-light">
                 <Mail size={15} className="text-brand-blue flex-shrink-0" />
-                <a href="mailto:hello@wescaleup.com" className="hover:text-white transition-colors">
-                  hello@wescaleup.com
+                <a href="mailto:slim.laribi@wescaleup.tech" className="hover:text-white transition-colors">
+                  slim.laribi@wescaleup.tech
                 </a>
               </div>
               <div className="flex items-center gap-3 text-sm text-ink-light">
@@ -57,18 +53,13 @@ export function Footer() {
             {/* Social */}
             <div className="flex items-center gap-3 mt-8">
               <a
-                href="#"
+                href="https://www.linkedin.com/company/scaleup-data-driven-academy/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand-blue transition-colors duration-200"
                 aria-label="LinkedIn"
               >
                 <Linkedin size={15} />
-              </a>
-              <a
-                href="#"
-                className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand-blue transition-colors duration-200"
-                aria-label="Twitter/X"
-              >
-                <Twitter size={15} />
               </a>
             </div>
           </div>

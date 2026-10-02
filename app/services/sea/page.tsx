@@ -16,6 +16,7 @@ import { FadeIn } from '@/components/ui/FadeIn'
 import { SectionLabel } from '@/components/ui/SectionLabel'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/services/sea' },
   title: 'SEA / Google Ads — Search, PMAX, Ecommerce Tracking & Scalable Acquisition',
   description:
     'Advanced Google Ads systems for ecommerce and lead generation: Search, Performance Max, Display, keyword architecture, GTM, GA4, enhanced conversions, feed optimization, attribution clarity, and automated reporting.',

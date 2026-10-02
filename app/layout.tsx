@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import { Plus_Jakarta_Sans, Inter } from 'next/font/google'
 import './globals.css'
 import { Navbar } from '@/components/layout/Navbar'
@@ -20,63 +21,35 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://wescaleup.tech'),
+  metadataBase: new URL('https://www.wescaleup.tech'),
   title: {
     default: 'Wescaleup — Growth systems, not just campaigns',
     template: '%s | Wescaleup',
   },
   description:
     'Wescaleup is a data-driven growth agency combining performance marketing, advanced tracking, analytics, technical SEO, and automation into scalable systems that grow your business.',
-  keywords: [
-    'growth agency',
-    'performance marketing',
-    'SEO agency',
-    'technical SEO',
-    'Google Ads',
-    'Meta Ads',
-    'server-side tracking',
-    'GTM',
-    'GA4',
-    'marketing automation',
-    'web analytics',
-    'conversion optimization',
-    'n8n automation',
-    'data-driven agency',
-  ],
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/favicon.ico',
-  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://wescaleup.tech',
+    url: 'https://www.wescaleup.tech',
     siteName: 'Wescaleup',
     title: 'Wescaleup — Growth systems, not just campaigns',
     description:
       'We build advanced tracking, analytics, paid media, technical SEO, and automation systems for ambitious brands.',
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'Wescaleup — Growth systems, not just campaigns',
-      },
-    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Wescaleup — Growth systems, not just campaigns',
     description:
       'Advanced tracking, analytics, paid media, technical SEO, and automation systems built for measurable growth.',
-    images: ['/og-image.png'],
   },
   robots: {
     index: true,
     follow: true,
   },
 }
+
+const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID
 
 export default function RootLayout({
   children,
@@ -86,6 +59,25 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${plusJakarta.variable} ${inter.variable}`}>
       <body className="font-sans antialiased">
+        {GTM_ID && (
+          <>
+            <Script id="gtm" strategy="afterInteractive">
+              {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${GTM_ID}');`}
+            </Script>
+            <noscript>
+              <iframe
+                src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+                height="0"
+                width="0"
+                style={{ display: 'none', visibility: 'hidden' }}
+              />
+            </noscript>
+          </>
+        )}
         <Navbar />
         <main>{children}</main>
         <Footer />

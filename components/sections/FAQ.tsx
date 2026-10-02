@@ -1,17 +1,34 @@
 'use client'
 
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import { faqs } from '@/lib/data'
 import { FadeIn } from '@/components/ui/FadeIn'
 import { SectionHeader } from '@/components/ui/SectionLabel'
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer,
+    },
+  })),
+}
 
 export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0)
 
   return (
     <section className="section-pad bg-surface-muted">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <div className="container-narrow">
         <FadeIn className="mb-14 flex flex-col items-center">
           <SectionHeader
@@ -30,6 +47,7 @@ export function FAQ() {
                   onClick={() => setOpenIndex(openIndex === i ? null : i)}
                   className="w-full flex items-center justify-between gap-4 p-6 text-left hover:bg-surface-warm transition-colors duration-200"
                   aria-expanded={openIndex === i}
+                  aria-controls={`faq-answer-${i}`}
                 >
                   <span className="font-display font-semibold text-ink text-sm sm:text-base pr-4">
                     {faq.question}
@@ -43,23 +61,22 @@ export function FAQ() {
                   </motion.div>
                 </button>
 
-                <AnimatePresence initial={false}>
-                  {openIndex === i && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: [0.21, 0.47, 0.32, 0.98] }}
-                    >
-                      <div className="px-6 pb-6">
-                        <div className="h-px bg-surface-border mb-5" />
-                        <p className="text-ink-secondary text-sm leading-relaxed">
-                          {faq.answer}
-                        </p>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {/* Answer is always in the HTML; collapsed visually when closed */}
+                <div
+                  id={`faq-answer-${i}`}
+                  className={`grid transition-[grid-template-rows,opacity,visibility] duration-300 ease-premium ${
+                    openIndex === i ? 'grid-rows-[1fr] opacity-100 visible' : 'grid-rows-[0fr] opacity-0 invisible'
+                  }`}
+                >
+                  <div className="overflow-hidden">
+                    <div className="px-6 pb-6">
+                      <div className="h-px bg-surface-border mb-5" />
+                      <p className="text-ink-secondary text-sm leading-relaxed">
+                        {faq.answer}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </FadeIn>
           ))}

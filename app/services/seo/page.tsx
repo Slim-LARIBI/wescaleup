@@ -18,6 +18,7 @@ import { FadeIn } from '@/components/ui/FadeIn'
 import { SectionLabel } from '@/components/ui/SectionLabel'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/services/seo' },
   title: 'SEO — Technical, Semantic, GEO & Automation Systems',
   description:
     'Advanced SEO systems combining technical SEO, semantic architecture, Core Web Vitals, GEO SEO, Search Console pipelines, Google Apps Script, n8n workflows, and performance dashboards.',

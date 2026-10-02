@@ -12,6 +12,7 @@ import {
 } from 'lucide-react'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/contact' },
   title: 'Contact — Book a Strategy Call',
   description:
     'Book a free strategy call with Wescaleup. Tell us about your growth goals, current stack, and commercial priorities — and we will come back with a clearer path forward.',

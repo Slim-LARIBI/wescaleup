@@ -18,6 +18,7 @@ import { FadeIn } from '@/components/ui/FadeIn'
 import { SectionLabel } from '@/components/ui/SectionLabel'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/services/custom-saas' },
   title: 'Custom SaaS — Internal Tools, Portals, Dashboards & Workflow Software',
   description:
     'Custom SaaS systems built for operations, internal workflows, reporting, dashboards, portals, automation, and scalable business processes.',

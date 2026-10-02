@@ -43,7 +43,7 @@ export function ClosingCTA() {
               <ArrowRight size={15} className="transition-transform duration-200 group-hover:translate-x-0.5" />
             </Link>
             <Link
-              href="mailto:hello@wescaleup.com"
+              href="mailto:slim.laribi@wescaleup.tech"
               className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full bg-white/10 border border-white/20 text-white font-semibold text-base hover:bg-white/20 transition-all duration-200 ease-premium"
             >
               <MessageSquare size={16} />

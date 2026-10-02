@@ -16,6 +16,7 @@ import { FadeIn } from '@/components/ui/FadeIn'
 import { SectionLabel } from '@/components/ui/SectionLabel'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/services/meta-ads' },
   title: 'Meta Ads — Advanced Ecommerce Acquisition & Signal Architecture',
   description:
     'High-performance Meta Ads systems for ecommerce brands: ROAS optimization, Meta Pixel, Conversion API, catalog ads, XML feeds, A/B testing, attribution clarity, and automated dashboards.',

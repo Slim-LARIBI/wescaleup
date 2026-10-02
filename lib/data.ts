@@ -12,6 +12,7 @@ export type ServiceId =
 
 export interface Service {
   id: ServiceId
+  href: string
   title: string
   shortDescription: string
   description: string
@@ -25,6 +26,7 @@ export interface Service {
 export const services: Service[] = [
   {
     id: 'seo',
+    href: '/services/seo',
     title: 'Search Growth & Technical SEO',
     shortDescription: 'Turn organic search into a durable growth channel through technical clarity, stronger architecture, and content built to rank and convert.',
     description:
@@ -53,6 +55,7 @@ export const services: Service[] = [
   },
   {
     id: 'google-ads',
+    href: '/services/sea',
     title: 'Google Ads Performance',
     shortDescription: 'Build a more efficient acquisition engine with campaigns structured for conversion quality, budget control, and scalable returns.',
     description:
@@ -81,6 +84,7 @@ export const services: Service[] = [
   },
   {
     id: 'meta-ads',
+    href: '/services/meta-ads',
     title: 'Paid Social Growth',
     shortDescription: 'Scale paid social with stronger signal quality, smarter audience logic, and campaigns built for acquisition and profitable growth.',
     description:
@@ -108,6 +112,7 @@ export const services: Service[] = [
   },
   {
     id: 'analytics',
+    href: '/services/analytics',
     title: 'Analytics & Decision Intelligence',
     shortDescription: 'Transform fragmented reporting into a reliable analytics foundation that supports faster, sharper marketing and business decisions.',
     description:
@@ -135,6 +140,7 @@ export const services: Service[] = [
   },
   {
     id: 'tracking',
+    href: '/services/analytics',
     title: 'Tracking Architecture & GTM',
     shortDescription: 'Build a clean measurement layer with GTM, DataLayer strategy, and event tracking that supports every growth channel.',
     description:
@@ -162,6 +168,7 @@ export const services: Service[] = [
   },
   {
     id: 'server-side',
+    href: '/services/analytics',
     title: 'Server-Side Measurement',
     shortDescription: 'Strengthen signal resilience, improve data quality, and future-proof measurement with a more reliable server-side setup.',
     description:
@@ -189,6 +196,7 @@ export const services: Service[] = [
   },
   {
     id: 'automation',
+    href: '/services/automation',
     title: 'Automation Systems',
     shortDescription: 'Design smarter workflows that reduce manual work, improve speed, and connect your marketing stack into one scalable operating system.',
     description:
@@ -216,6 +224,7 @@ export const services: Service[] = [
   },
   {
     id: 'email',
+    href: '/services/automation',
     title: 'Lifecycle & Email Automation',
     shortDescription: 'Create automated email journeys that improve conversion, retention, and customer value across the full lifecycle.',
     description:
@@ -243,6 +252,7 @@ export const services: Service[] = [
   },
   {
     id: 'dashboards',
+    href: '/services/analytics',
     title: 'Reporting & Growth Visibility',
     shortDescription: 'Bring your KPIs into one clear reporting system so teams can act faster with less noise and more confidence.',
     description:
@@ -270,6 +280,7 @@ export const services: Service[] = [
   },
   {
     id: 'cro',
+    href: '/services',
     title: 'Conversion Optimization',
     shortDescription: 'Improve the performance of your existing traffic by reducing friction and strengthening the paths that drive conversion.',
     description:

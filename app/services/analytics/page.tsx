@@ -18,6 +18,7 @@ import { FadeIn } from '@/components/ui/FadeIn'
 import { SectionLabel } from '@/components/ui/SectionLabel'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/services/analytics' },
   title: 'Analytics & Tracking — GTM, GA4, CAPI, Server-Side & Data Architecture',
   description:
     'Advanced web analytics and tracking systems: GTM, GA4, Meta Pixel, CAPI, server-side tracking, dataLayer design, tagging plan, attribution, filters, dashboards, and QA.',

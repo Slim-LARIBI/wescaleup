@@ -6,6 +6,7 @@ import { SectionHeader, SectionLabel } from '@/components/ui/SectionLabel'
 import { ClosingCTA } from '@/components/sections/ClosingCTA'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/services' },
   title: 'Services — Growth Systems, Tracking, Ads, SEO & Automation',
   description:
     'Explore Wescaleup services: Meta Ads, Google Ads, SEO, Analytics & Tracking, Marketing Automation, and Custom SaaS.',

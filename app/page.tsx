@@ -9,7 +9,8 @@ import { FAQ } from '@/components/sections/FAQ'
 import { ClosingCTA } from '@/components/sections/ClosingCTA'
 
 export const metadata: Metadata = {
-  title: 'Wescaleup — Engineered Growth for Ambitious Brands',
+  alternates: { canonical: '/' },
+  title: { absolute: 'Wescaleup — Growth systems, not just campaigns' },
   description:
     'We build scalable growth systems through advanced tracking, performance marketing, data analytics, and intelligent automation. Book a free discovery call.',
 }

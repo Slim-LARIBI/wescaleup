@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
-import { Plus_Jakarta_Sans, Inter } from 'next/font/google'
 import { notFound } from 'next/navigation'
 import '../globals.css'
 import { Navbar } from '@/components/layout/Navbar'
@@ -9,19 +8,17 @@ import { Footer } from '@/components/layout/Footer'
 import { getDictionary } from '@/dictionaries'
 import { isLocale, locales, SITE_URL } from '@/lib/i18n'
 
-const plusJakarta = Plus_Jakarta_Sans({
-  subsets: ['latin'],
-  variable: '--font-plus-jakarta',
-  display: 'swap',
-  weight: ['300', '400', '500', '600', '700', '800'],
-})
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-  weight: ['400', '500', '600'],
-})
+// Self-hosted fonts (served from our own domain, nothing is downloaded from Google at build time).
+// The --font-plus-jakarta and --font-inter variables are defined in globals.css.
+import '@fontsource/plus-jakarta-sans/300.css'
+import '@fontsource/plus-jakarta-sans/400.css'
+import '@fontsource/plus-jakarta-sans/500.css'
+import '@fontsource/plus-jakarta-sans/600.css'
+import '@fontsource/plus-jakarta-sans/700.css'
+import '@fontsource/plus-jakarta-sans/800.css'
+import '@fontsource/inter/400.css'
+import '@fontsource/inter/500.css'
+import '@fontsource/inter/600.css'
 
 export const dynamicParams = false
 
@@ -60,7 +57,7 @@ export default function RootLayout({
   const { common } = getDictionary(lang)
 
   return (
-    <html lang={lang} className={`${plusJakarta.variable} ${inter.variable}`}>
+    <html lang={lang}>
       <body className="font-sans antialiased">
         {GTM_ID && (
           <>

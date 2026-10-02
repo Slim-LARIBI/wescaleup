@@ -1,22 +1,22 @@
-import { processSteps } from '@/lib/data'
 import { FadeIn, StaggerChildren, StaggerItem } from '@/components/ui/FadeIn'
 import { SectionHeader } from '@/components/ui/SectionLabel'
 import { ArrowRight } from 'lucide-react'
+import type { HomeDictionary } from '@/dictionaries/en/home'
 
-export function Process() {
+export function Process({ t }: { t: HomeDictionary['process'] }) {
   return (
     <section id="process" className="section-pad bg-surface-muted">
       <div className="container-site">
         <FadeIn className="mb-16 flex flex-col items-center">
           <SectionHeader
-            label="How We Work"
+            label={t.label}
             title={
               <>
-                A clear process,{' '}
-                <span className="text-gradient-brand">measurable progress.</span>
+                {t.titleStart}{' '}
+                <span className="text-gradient-brand">{t.titleHighlight}</span>
               </>
             }
-            subtitle="We follow a structured engagement model that ensures clarity, alignment, and results at every stage of the project."
+            subtitle={t.subtitle}
           />
         </FadeIn>
 
@@ -31,20 +31,20 @@ export function Process() {
             aria-hidden
           />
 
-          {processSteps.map((step, i) => (
-            <StaggerItem key={step.number}>
+          {t.steps.map((step, i) => (
+            <StaggerItem key={step.title}>
               <div className="card p-6 lg:p-0 lg:bg-transparent lg:border-0 lg:shadow-none lg:rounded-none group">
                 <div className="flex items-start gap-5 lg:relative lg:flex-col lg:items-center lg:gap-0 lg:text-center">
                   {/* Number circle */}
                   <div className="w-12 h-12 lg:w-16 lg:h-16 rounded-full bg-gradient-brand shadow-button lg:bg-none lg:bg-white lg:border-2 lg:border-brand-blue-mid/30 lg:shadow-card lg:mb-6 lg:group-hover:border-brand-blue lg:group-hover:shadow-card-hover flex items-center justify-center flex-shrink-0 transition-all duration-300 relative z-10">
                     <span className="font-bold text-white text-sm lg:font-display lg:text-brand-blue lg:text-lg">
-                      {step.number}
+                      {String(i + 1).padStart(2, '0')}
                     </span>
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-2 lg:mb-3 lg:justify-center">
                       <h3 className="font-display font-bold text-ink text-base lg:text-sm">{step.title}</h3>
-                      {i < processSteps.length - 1 && (
+                      {i < t.steps.length - 1 && (
                         <ArrowRight size={14} className="text-ink-light lg:hidden" />
                       )}
                     </div>
@@ -59,18 +59,13 @@ export function Process() {
         {/* Bottom trust note */}
         <FadeIn delay={0.3} className="mt-14">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-8 p-8 rounded-2xl bg-white border border-surface-border">
-            {[
-              { value: 'Week 1', label: 'Full audit delivered' },
-              { value: 'Week 2–3', label: 'Strategy aligned & approved' },
-              { value: 'Week 4+', label: 'Implementation underway' },
-              { value: 'Ongoing', label: 'Optimize, report & scale' },
-            ].map((item, i) => (
+            {t.timeline.map((item, i) => (
               <div key={item.value} className="flex items-center gap-4">
                 <div className="text-center">
                   <div className="font-display font-bold text-brand-blue text-sm">{item.value}</div>
                   <div className="text-xs text-ink-muted mt-0.5">{item.label}</div>
                 </div>
-                {i < 3 && (
+                {i < t.timeline.length - 1 && (
                   <ArrowRight size={16} className="text-surface-border-mid hidden sm:block flex-shrink-0" />
                 )}
               </div>

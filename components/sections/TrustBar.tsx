@@ -1,33 +1,25 @@
 import { FadeIn } from '@/components/ui/FadeIn'
 import { CheckCircle2 } from 'lucide-react'
+import type { HomeDictionary } from '@/dictionaries/en/home'
 
-const pillars = [
-  { text: 'Data-Driven Execution' },
-  { text: 'Advanced Tracking Infrastructure' },
-  { text: 'Performance Marketing' },
-  { text: 'Business-Oriented Results' },
-  { text: 'Scalable Automation Systems' },
-  { text: 'Reliable Measurement' },
-]
-
-export function TrustBar() {
+export function TrustBar({ t }: { t: HomeDictionary['trustBar'] }) {
   return (
     <section className="bg-white border-y border-surface-border section-pad-sm">
       <div className="container-site">
         <FadeIn>
           <p className="text-center text-xs font-semibold tracking-widest uppercase text-ink-light mb-8">
-            What we stand for
+            {t.title}
           </p>
         </FadeIn>
         <FadeIn delay={0.1}>
           <div className="flex flex-wrap items-center justify-center gap-3 lg:gap-4">
-            {pillars.map((p) => (
+            {t.pillars.map((pillar) => (
               <div
-                key={p.text}
+                key={pillar}
                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-surface-muted border border-surface-border text-sm font-medium text-ink-secondary"
               >
                 <CheckCircle2 size={14} className="text-brand-blue flex-shrink-0" />
-                {p.text}
+                {pillar}
               </div>
             ))}
           </div>

@@ -5,23 +5,32 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, ArrowRight, ChevronDown } from 'lucide-react'
+import type { CommonDictionary } from '@/dictionaries/en/common'
+import { localizedHref, type Locale } from '@/lib/i18n'
+import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher'
 
-const navLinks = [
-  { label: 'Process', href: '/#process' },
-  { label: 'Why Us', href: '/#why' },
-  { label: 'Contact', href: '/contact' },
-]
+interface NavbarProps {
+  t: CommonDictionary['nav']
+  switcherLabel: string
+  lang: Locale
+}
 
-const serviceLinks = [
-  { label: 'Meta Ads', href: '/services/meta-ads' },
-  { label: 'SEA / Google Ads', href: '/services/sea' },
-  { label: 'SEO', href: '/services/seo' },
-  { label: 'Analytics & Tracking', href: '/services/analytics' },
-  { label: 'Marketing Automation', href: '/services/automation' },
-  { label: 'Custom SaaS', href: '/services/custom-saas' },
-]
+export function Navbar({ t, switcherLabel, lang }: NavbarProps) {
+  const navLinks = [
+    { label: t.links.process, href: localizedHref(lang, '/#process') },
+    { label: t.links.why, href: localizedHref(lang, '/#why') },
+    { label: t.links.contact, href: localizedHref(lang, '/contact') },
+  ]
 
-export function Navbar() {
+  const serviceLinks = [
+    { label: t.serviceLinks.metaAds, href: localizedHref(lang, '/services/meta-ads') },
+    { label: t.serviceLinks.sea, href: localizedHref(lang, '/services/sea') },
+    { label: t.serviceLinks.seo, href: localizedHref(lang, '/services/seo') },
+    { label: t.serviceLinks.analytics, href: localizedHref(lang, '/services/analytics') },
+    { label: t.serviceLinks.automation, href: localizedHref(lang, '/services/automation') },
+    { label: t.serviceLinks.customSaas, href: localizedHref(lang, '/services/custom-saas') },
+  ]
+
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [servicesOpen, setServicesOpen] = useState(false)
@@ -49,8 +58,9 @@ export function Navbar() {
     }
   }, [menuOpen])
 
+  const servicesHref = localizedHref(lang, '/services')
   const isServicesActive =
-    pathname === '/services' || pathname.startsWith('/services/')
+    pathname === servicesHref || pathname.startsWith(`${servicesHref}/`)
 
   return (
     <>
@@ -61,7 +71,7 @@ export function Navbar() {
       >
         <div className="container-site">
           <div className="flex items-center justify-between h-16 lg:h-20">
-            <Link href="/" className="flex items-center gap-2 group flex-shrink-0">
+            <Link href={localizedHref(lang, '/')} className="flex items-center gap-2 group flex-shrink-0">
               <div className="w-8 h-8 rounded-lg bg-gradient-brand flex items-center justify-center flex-shrink-0">
                 <span className="text-white font-bold text-sm">W</span>
               </div>
@@ -77,7 +87,7 @@ export function Navbar() {
                 onMouseLeave={() => setServicesOpen(false)}
               >
                   <Link
-                    href="/services"
+                    href={servicesHref}
                     className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
                       isServicesActive
                         ? 'text-brand-blue bg-brand-blue-light'
@@ -86,7 +96,7 @@ export function Navbar() {
                     aria-expanded={servicesOpen}
                     aria-haspopup="menu"
                   >
-                    Services
+                    {t.services}
                     <ChevronDown
                       size={14}
                       className={`transition-transform duration-200 ${
@@ -107,10 +117,10 @@ export function Navbar() {
                       <div className="w-[320px] rounded-2xl border border-surface-border bg-white/95 backdrop-blur-md shadow-[0_20px_60px_rgba(24,39,75,0.12)] p-3">
                         <div className="px-3 pt-2 pb-3 border-b border-surface-border">
                           <p className="text-[11px] uppercase tracking-[0.18em] text-ink-light font-semibold">
-                            Our Services
+                            {t.ourServices}
                           </p>
                           <p className="text-sm text-ink-muted mt-1">
-                            Advanced growth systems, tracking, paid media, and software.
+                            {t.servicesIntro}
                           </p>
                         </div>
 
@@ -153,16 +163,17 @@ export function Navbar() {
               ))}
             </nav>
 
-            <div className="hidden lg:flex items-center">
+            <div className="hidden lg:flex items-center gap-3">
+              <LanguageSwitcher lang={lang} label={switcherLabel} />
               <Link
-                href="/contact"
+                href={localizedHref(lang, '/contact')}
                 className="group inline-flex flex-col items-start rounded-2xl bg-brand-blue text-white px-5 py-3 shadow-button hover:bg-brand-blue-dark hover:shadow-button-hover transition-all duration-200 ease-premium"
               >
                 <span className="text-[11px] leading-none font-semibold uppercase tracking-[0.18em] text-white/70 mb-1.5">
-                  Free 30-min strategy call
+                  {t.ctaEyebrow}
                 </span>
                 <span className="inline-flex items-center gap-2 text-sm font-semibold text-white">
-                  Book a strategy call
+                  {t.cta}
                   <ArrowRight
                     size={14}
                     className="transition-transform duration-200 group-hover:translate-x-0.5"
@@ -174,7 +185,7 @@ export function Navbar() {
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="lg:hidden p-2 rounded-lg text-ink hover:bg-surface-muted transition-colors"
-              aria-label="Toggle menu"
+              aria-label={t.toggleMenu}
             >
               {menuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
@@ -195,7 +206,7 @@ export function Navbar() {
               <div className="mb-2">
                 <div className="px-4 pb-2">
                   <p className="text-[11px] uppercase tracking-[0.18em] text-ink-light font-semibold">
-                    Services
+                    {t.services}
                   </p>
                 </div>
 
@@ -246,20 +257,29 @@ export function Navbar() {
               ))}
 
               <motion.div
+                initial={{ opacity: 0, x: -16 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.22 }}
+                className="px-4 pt-3"
+              >
+                <LanguageSwitcher lang={lang} label={switcherLabel} className="text-sm" />
+              </motion.div>
+
+              <motion.div
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.25 }}
                 className="mt-4"
               >
                 <Link
-                  href="/contact"
+                  href={localizedHref(lang, '/contact')}
                   className="flex flex-col items-center justify-center w-full rounded-2xl border border-brand-blue-mid/20 bg-brand-blue text-white px-5 py-4 shadow-button"
                 >
                   <span className="text-[11px] uppercase tracking-[0.18em] text-white/75 font-semibold mb-1">
-                    Free 30-min strategy call
+                    {t.ctaEyebrow}
                   </span>
                   <span className="inline-flex items-center gap-2 font-semibold text-base">
-                    Book a strategy call
+                    {t.cta}
                     <ArrowRight size={16} />
                   </span>
                 </Link>

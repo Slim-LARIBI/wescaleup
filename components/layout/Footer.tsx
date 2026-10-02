@@ -1,25 +1,33 @@
 import Link from 'next/link'
 import { ArrowRight, Mail, MapPin, Linkedin } from 'lucide-react'
+import type { CommonDictionary } from '@/dictionaries/en/common'
+import { localizedHref, translatePath, type Locale } from '@/lib/i18n'
 
-const services = [
-  { label: 'Meta Ads', href: '/services/meta-ads' },
-  { label: 'SEA / Google Ads', href: '/services/sea' },
-  { label: 'SEO', href: '/services/seo' },
-  { label: 'Analytics & Tracking', href: '/services/analytics' },
-  { label: 'Marketing Automation', href: '/services/automation' },
-  { label: 'Custom SaaS', href: '/services/custom-saas' },
-]
+interface FooterProps {
+  t: CommonDictionary['footer']
+  serviceLabels: CommonDictionary['nav']['serviceLinks']
+  lang: Locale
+}
 
-const company = [
-  { label: 'Home', href: '/' },
-  { label: 'Services', href: '/services' },
-  { label: 'Process', href: '/#process' },
-  { label: 'Why Wescaleup', href: '/#why' },
-  { label: 'Contact', href: '/contact' },
-]
-
-export function Footer() {
+export function Footer({ t, serviceLabels, lang }: FooterProps) {
   const year = new Date().getFullYear()
+
+  const services = [
+    { label: serviceLabels.metaAds, href: localizedHref(lang, '/services/meta-ads') },
+    { label: serviceLabels.sea, href: localizedHref(lang, '/services/sea') },
+    { label: serviceLabels.seo, href: localizedHref(lang, '/services/seo') },
+    { label: serviceLabels.analytics, href: localizedHref(lang, '/services/analytics') },
+    { label: serviceLabels.automation, href: localizedHref(lang, '/services/automation') },
+    { label: serviceLabels.customSaas, href: localizedHref(lang, '/services/custom-saas') },
+  ]
+
+  const company = [
+    { label: t.company.home, href: localizedHref(lang, '/') },
+    { label: t.company.services, href: localizedHref(lang, '/services') },
+    { label: t.company.process, href: localizedHref(lang, '/#process') },
+    { label: t.company.why, href: localizedHref(lang, '/#why') },
+    { label: t.company.contact, href: localizedHref(lang, '/contact') },
+  ]
 
   return (
     <footer className="bg-ink text-white">
@@ -28,15 +36,14 @@ export function Footer() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8">
           {/* Brand column */}
           <div className="lg:col-span-4">
-            <Link href="/" className="inline-flex items-center gap-2 mb-6">
+            <Link href={localizedHref(lang, '/')} className="inline-flex items-center gap-2 mb-6">
               <div className="w-8 h-8 rounded-lg bg-gradient-brand flex items-center justify-center flex-shrink-0">
                 <span className="text-white font-bold text-sm">W</span>
               </div>
               <span className="font-display font-bold text-xl tracking-tight">Wescaleup</span>
             </Link>
             <p className="text-ink-light text-sm leading-relaxed max-w-xs mb-8">
-              We build scalable growth systems through data, advanced tracking,
-              performance marketing, and intelligent automation.
+              {t.tagline}
             </p>
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-sm text-ink-light">
@@ -47,7 +54,7 @@ export function Footer() {
               </div>
               <div className="flex items-center gap-3 text-sm text-ink-light">
                 <MapPin size={15} className="text-brand-blue flex-shrink-0" />
-                <span>Remote-first · Worldwide</span>
+                <span>{t.location}</span>
               </div>
             </div>
             {/* Social */}
@@ -67,7 +74,7 @@ export function Footer() {
           {/* Services */}
           <div className="lg:col-span-4">
             <h3 className="text-sm font-semibold tracking-widest uppercase text-ink-light mb-6">
-              Services
+              {t.servicesTitle}
             </h3>
             <ul className="space-y-3">
               {services.map((item) => (
@@ -86,7 +93,7 @@ export function Footer() {
           {/* Company + CTA */}
           <div className="lg:col-span-4">
             <h3 className="text-sm font-semibold tracking-widest uppercase text-ink-light mb-6">
-              Company
+              {t.companyTitle}
             </h3>
             <ul className="space-y-3 mb-10">
               {company.map((item) => (
@@ -103,15 +110,15 @@ export function Footer() {
 
             {/* Mini CTA */}
             <div className="p-5 rounded-xl bg-white/5 border border-white/10">
-              <p className="text-sm font-semibold text-white mb-1">Ready to scale?</p>
+              <p className="text-sm font-semibold text-white mb-1">{t.miniCtaTitle}</p>
               <p className="text-xs text-ink-light mb-4 leading-relaxed">
-                Let&apos;s discuss your growth goals in a free 30-minute discovery call.
+                {t.miniCtaText}
               </p>
               <Link
-                href="/contact"
+                href={localizedHref(lang, '/contact')}
                 className="inline-flex items-center gap-2 text-sm font-semibold text-brand-blue-mid hover:text-white transition-colors"
               >
-                Book a call <ArrowRight size={14} />
+                {t.miniCtaLink} <ArrowRight size={14} />
               </Link>
             </div>
           </div>
@@ -122,14 +129,14 @@ export function Footer() {
       <div className="border-t border-white/10">
         <div className="container-site py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-ink-light">
-            © {year} Wescaleup. All rights reserved.
+            © {year} {t.rights}
           </p>
           <div className="flex items-center gap-6">
-            <Link href="/privacy" className="text-xs text-ink-light hover:text-white transition-colors">
-              Privacy Policy
+            <Link href={localizedHref(lang, translatePath('/privacy', 'en', lang))} className="text-xs text-ink-light hover:text-white transition-colors">
+              {t.privacy}
             </Link>
-            <Link href="/terms" className="text-xs text-ink-light hover:text-white transition-colors">
-              Terms of Service
+            <Link href={localizedHref(lang, translatePath('/terms', 'en', lang))} className="text-xs text-ink-light hover:text-white transition-colors">
+              {t.terms}
             </Link>
           </div>
         </div>

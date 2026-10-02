@@ -3,25 +3,25 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
-import { faqs } from '@/lib/data'
+import type { HomeDictionary } from '@/dictionaries/en/home'
 import { FadeIn } from '@/components/ui/FadeIn'
 import { SectionHeader } from '@/components/ui/SectionLabel'
 
-const faqJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: faqs.map((faq) => ({
-    '@type': 'Question',
-    name: faq.question,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: faq.answer,
-    },
-  })),
-}
-
-export function FAQ() {
+export function FAQ({ t }: { t: HomeDictionary['faq'] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(0)
+
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: t.items.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
+  }
 
   return (
     <section className="section-pad bg-surface-muted">
@@ -32,15 +32,15 @@ export function FAQ() {
       <div className="container-narrow">
         <FadeIn className="mb-14 flex flex-col items-center">
           <SectionHeader
-            label="FAQ"
+            label={t.label}
             labelVariant="neutral"
-            title="Common questions"
-            subtitle="Everything you need to know before we start working together."
+            title={t.title}
+            subtitle={t.subtitle}
           />
         </FadeIn>
 
         <div className="space-y-3">
-          {faqs.map((faq, i) => (
+          {t.items.map((faq, i) => (
             <FadeIn key={i} delay={i * 0.04}>
               <div className="card overflow-hidden">
                 <button

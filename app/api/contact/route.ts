@@ -16,6 +16,86 @@ type ContactPayload = {
   currentStack?: string
   goals?: string
   message?: string
+  /** Honeypot: hidden from humans, only robots fill it */
+  fax?: string
+  /** Visitor's clock (ms) when the form was displayed and when it was submitted */
+  formStartedAt?: number
+  formSubmittedAt?: number
+}
+
+const MIN_FILL_TIME_MS = 3000
+
+const MAX_LENGTHS: Partial<Record<keyof ContactPayload, number>> = {
+  name: 100,
+  company: 150,
+  email: 254,
+  website: 300,
+  projectType: 100,
+  businessType: 100,
+  budget: 100,
+  timeline: 100,
+  adSpend: 100,
+  currentStack: 100,
+  goals: 500,
+  message: 5000,
+}
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
+
+/** One single word of 16+ letters with random upper/lower case, e.g. "CPOpOFnXJfbqmoCyC". */
+function looksLikeRandomName(name: string) {
+  const value = name.trim()
+  if (!/^[A-Za-z]{16,}$/.test(value)) return false
+  const innerUppercase = value.slice(1).replace(/[^A-Z]/g, '').length
+  return innerUppercase >= 3 && /[a-z]/.test(value)
+}
+
+/** Returns the reason why the request looks like spam, or null if it looks legitimate. */
+function detectSpam(body: ContactPayload): string | null {
+  if (!body || typeof body !== 'object' || Array.isArray(body)) return 'requête invalide'
+  if (body.fax) return 'champ piège rempli'
+
+  const { formStartedAt, formSubmittedAt } = body
+  if (typeof formStartedAt !== 'number' || typeof formSubmittedAt !== 'number') {
+    return 'horodatage absent'
+  }
+  if (formSubmittedAt - formStartedAt < MIN_FILL_TIME_MS) return 'envoi trop rapide'
+
+  for (const field of ['name', 'email', 'projectType', 'goals', 'message'] as const) {
+    if (typeof body[field] !== 'string' || !body[field]?.trim()) return `champ obligatoire manquant (${field})`
+  }
+
+  for (const [field, max] of Object.entries(MAX_LENGTHS)) {
+    const value = body[field as keyof ContactPayload]
+    if (value === undefined || value === null || value === '') continue
+    if (typeof value !== 'string') return `format invalide (${field})`
+    if (value.length > (max as number)) return `texte trop long (${field})`
+  }
+
+  if (!EMAIL_PATTERN.test(body.email)) return 'email invalide'
+  if (looksLikeRandomName(body.name)) return 'nom aléatoire'
+
+  return null
+}
+
+/** Generic error sent to the browser — the details stay in the server logs only. */
+function genericError() {
+  return NextResponse.json({ success: false, error: 'Submission failed.' }, { status: 500 })
+}
+
+/** Escapes form values before inserting them into the notification email HTML. */
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+/** Escaped value, or "-" when the field is empty. */
+function field(value?: string) {
+  return value ? escapeHtml(value) : '-'
 }
 
 function getEnv(name: string) {
@@ -30,17 +110,12 @@ export async function POST(req: Request) {
   try {
     const body = (await req.json()) as ContactPayload
 
-    if (
-      !body.name ||
-      !body.email ||
-      !body.projectType ||
-      !body.goals ||
-      !body.message
-    ) {
-      return NextResponse.json(
-        { success: false, error: 'Missing required fields.' },
-        { status: 400 }
-      )
+    // Spam: nothing is sent to Airtable or by email, but the robot gets a normal success
+    // response so it cannot tell it was blocked. The log line contains no personal data.
+    const spamReason = detectSpam(body)
+    if (spamReason) {
+      console.warn(`[contact] spam bloqué : ${spamReason}`)
+      return NextResponse.json({ success: true })
     }
 
     const airtableApiKey = getEnv('AIRTABLE_API_KEY')
@@ -85,19 +160,9 @@ export async function POST(req: Request) {
     const airtableData = await airtableRes.json()
 
     if (!airtableRes.ok) {
-      console.error('Airtable error:', airtableData)
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Airtable insert failed.',
-          details: airtableData,
-        },
-        { status: 500 }
-      )
+      console.error('[contact] Airtable error:', airtableRes.status, airtableData)
+      return genericError()
     }
-
-    let emailSent = false
-    let emailError: unknown = null
 
     try {
       const { error } = await resend.emails.send({
@@ -109,43 +174,31 @@ export async function POST(req: Request) {
           <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #111;">
             <h2>Nouveau lead Wescaleup</h2>
 
-            <p><strong>Name:</strong> ${body.name}</p>
-            <p><strong>Company:</strong> ${body.company || '-'}</p>
-            <p><strong>Email:</strong> ${body.email}</p>
-            <p><strong>Website:</strong> ${body.website || '-'}</p>
-            <p><strong>Project Type:</strong> ${body.projectType || '-'}</p>
-            <p><strong>Business Type:</strong> ${body.businessType || '-'}</p>
-            <p><strong>Budget:</strong> ${body.budget || '-'}</p>
-            <p><strong>Timeline:</strong> ${body.timeline || '-'}</p>
-            <p><strong>Ad Spend:</strong> ${body.adSpend || '-'}</p>
-            <p><strong>Current Stack:</strong> ${body.currentStack || '-'}</p>
-            <p><strong>Goals:</strong> ${body.goals || '-'}</p>
-            <p><strong>Message:</strong><br />${(body.message || '').replace(/\n/g, '<br />')}</p>
+            <p><strong>Name:</strong> ${field(body.name)}</p>
+            <p><strong>Company:</strong> ${field(body.company)}</p>
+            <p><strong>Email:</strong> ${field(body.email)}</p>
+            <p><strong>Website:</strong> ${field(body.website)}</p>
+            <p><strong>Project Type:</strong> ${field(body.projectType)}</p>
+            <p><strong>Business Type:</strong> ${field(body.businessType)}</p>
+            <p><strong>Budget:</strong> ${field(body.budget)}</p>
+            <p><strong>Timeline:</strong> ${field(body.timeline)}</p>
+            <p><strong>Ad Spend:</strong> ${field(body.adSpend)}</p>
+            <p><strong>Current Stack:</strong> ${field(body.currentStack)}</p>
+            <p><strong>Goals:</strong> ${field(body.goals)}</p>
+            <p><strong>Message:</strong><br />${field(body.message).replace(/\n/g, '<br />')}</p>
           </div>
         `,
       })
 
-      if (error) {
-        emailError = error
-      } else {
-        emailSent = true
-      }
+      // The lead is already saved in Airtable: an email failure is only logged
+      if (error) console.error('[contact] Email error:', error)
     } catch (err) {
-      emailError = err
+      console.error('[contact] Email error:', err)
     }
 
-    return NextResponse.json({
-      success: true,
-      airtableInserted: true,
-      emailSent,
-      emailError,
-      recordId: airtableData.records?.[0]?.id || null,
-    })
+    return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Contact API error:', error)
-    return NextResponse.json(
-      { success: false, error: 'Unexpected server error.' },
-      { status: 500 }
-    )
+    console.error('[contact] Unexpected error:', error)
+    return genericError()
   }
 }

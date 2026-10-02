@@ -5,6 +5,9 @@
 @layer base {
   :root {
     --scroll-behavior: smooth;
+    /* Self-hosted fonts loaded in app/[lang]/layout.tsx (@fontsource packages) */
+    --font-plus-jakarta: 'Plus Jakarta Sans';
+    --font-inter: 'Inter';
   }
 
   html {

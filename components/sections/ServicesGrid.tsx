@@ -1,8 +1,24 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { services } from '@/lib/data'
+import type { HomeDictionary } from '@/dictionaries/en/home'
+import { localizedHref, type Locale } from '@/lib/i18n'
 import { FadeIn, StaggerChildren, StaggerItem } from '@/components/ui/FadeIn'
 import { SectionHeader } from '@/components/ui/SectionLabel'
+
+type ServiceId = keyof HomeDictionary['servicesGrid']['items']
+
+const services: { id: ServiceId; href: string; icon: string; color: string }[] = [
+  { id: 'seo', href: '/services/seo', icon: '🔍', color: 'blue' },
+  { id: 'google-ads', href: '/services/sea', icon: '🎯', color: 'orange' },
+  { id: 'meta-ads', href: '/services/meta-ads', icon: '📱', color: 'violet' },
+  { id: 'analytics', href: '/services/analytics', icon: '📊', color: 'emerald' },
+  { id: 'tracking', href: '/services/analytics', icon: '🏷️', color: 'amber' },
+  { id: 'server-side', href: '/services/analytics', icon: '⚡', color: 'cyan' },
+  { id: 'automation', href: '/services/automation', icon: '🤖', color: 'indigo' },
+  { id: 'email', href: '/services/automation', icon: '✉️', color: 'teal' },
+  { id: 'dashboards', href: '/services/analytics', icon: '📈', color: 'rose' },
+  { id: 'cro', href: '/services', icon: '⚙️', color: 'fuchsia' },
+]
 
 const colorMap: Record<string, { bg: string; text: string; border: string; badge: string }> = {
   blue: {
@@ -67,20 +83,25 @@ const colorMap: Record<string, { bg: string; text: string; border: string; badge
   },
 }
 
-export function ServicesGrid() {
+interface ServicesGridProps {
+  t: HomeDictionary['servicesGrid']
+  lang: Locale
+}
+
+export function ServicesGrid({ t, lang }: ServicesGridProps) {
   return (
     <section id="services" className="section-pad bg-surface-warm">
       <div className="container-site">
         <FadeIn className="mb-16 flex flex-col items-center">
           <SectionHeader
-            label="Our Expertise"
+            label={t.label}
             title={
               <>
-                We design and build{' '}
-                <span className="text-gradient-brand">scalable growth systems</span>
+                {t.titleStart}{' '}
+                <span className="text-gradient-brand">{t.titleHighlight}</span>
               </>
             }
-            subtitle="From tracking and analytics to paid media, SEO, and automation — we connect every layer of your marketing into one high-performance system."
+            subtitle={t.subtitle}
           />
         </FadeIn>
 
@@ -90,10 +111,11 @@ export function ServicesGrid() {
         >
           {services.map((service) => {
             const c = colorMap[service.color]
+            const text = t.items[service.id]
             return (
               <StaggerItem key={service.id}>
                 <Link
-                  href={`/services#${service.id}`}
+                  href={localizedHref(lang, service.href)}
                   className="group card-hover flex flex-col h-full p-7 transition-all duration-300"
                 >
                   {/* Icon */}
@@ -105,15 +127,15 @@ export function ServicesGrid() {
 
                   {/* Content */}
                   <h3 className="font-display font-bold text-ink text-lg mb-3 group-hover:text-brand-blue transition-colors duration-200">
-                    {service.title}
+                    {text.title}
                   </h3>
                   <p className="text-ink-muted text-sm leading-relaxed flex-1">
-                    {service.shortDescription}
+                    {text.shortDescription}
                   </p>
 
                   {/* CTA */}
                   <div className={`mt-5 flex items-center gap-1.5 text-sm font-semibold ${c.text} opacity-0 group-hover:opacity-100 transition-all duration-200 translate-x-0 group-hover:translate-x-0.5`}>
-                    Learn more
+                    {t.learnMore}
                     <ArrowRight size={13} />
                   </div>
                 </Link>
@@ -124,10 +146,10 @@ export function ServicesGrid() {
 
         <FadeIn delay={0.2} className="mt-12 flex justify-center">
           <Link
-            href="/services"
+            href={localizedHref(lang, '/services')}
             className="inline-flex items-center gap-2 px-8 py-4 rounded-full border border-surface-border bg-white text-ink font-semibold text-sm hover:border-brand-blue-mid hover:bg-brand-blue-light hover:text-brand-blue transition-all duration-200 ease-premium"
           >
-            View all services in detail
+            {t.viewAll}
             <ArrowRight size={14} />
           </Link>
         </FadeIn>

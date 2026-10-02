@@ -1,9 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
 import { ArrowRight, CheckCircle2, Loader2, ShieldCheck } from 'lucide-react'
+import type { ContactDictionary } from '@/dictionaries/en/contact'
 
 type FormState = 'idle' | 'submitting' | 'success' | 'error'
+
+// Values sent to the API / Airtable — kept in English in every language.
+// The labels shown to the visitor come from the dictionary (same order).
 
 const projectTypes = [
   'Meta Ads',
@@ -66,8 +71,19 @@ const currentStacks = [
   'Custom stack',
 ]
 
-export function ContactForm() {
+interface ContactFormProps {
+  t: ContactDictionary['form']
+  privacyHref: string
+}
+
+export function ContactForm({ t, privacyHref }: ContactFormProps) {
   const [formState, setFormState] = useState<FormState>('idle')
+  // Anti-spam: time at which the form was displayed (checked by the API)
+  const formStartedAt = useRef<number | null>(null)
+
+  useEffect(() => {
+    formStartedAt.current = Date.now()
+  }, [])
   const [form, setForm] = useState({
     name: '',
     company: '',
@@ -89,15 +105,22 @@ export function ContactForm() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    // Honeypot value read straight from the DOM (robots fill it without triggering React events)
+    const fax = new FormData(e.currentTarget).get('fax') ?? ''
     setFormState('submitting')
 
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          fax,
+          formStartedAt: formStartedAt.current,
+          formSubmittedAt: Date.now(),
+        }),
       })
 
       const data = await response.json()
@@ -122,12 +145,11 @@ export function ContactForm() {
         </div>
 
         <h3 className="font-display font-bold text-ink text-2xl mb-3">
-          Strategy request received.
+          {t.successTitle}
         </h3>
 
         <p className="text-ink-muted text-base leading-relaxed max-w-md">
-          Thank you for the context. We will review your project, assess the fit,
-          and come back to you within 24 business hours with the next step.
+          {t.successText}
         </p>
       </div>
     )
@@ -139,19 +161,19 @@ export function ContactForm() {
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
           <div>
             <p className="text-[11px] uppercase tracking-[0.18em] text-ink-light font-semibold mb-2">
-              Strategy intake
+              {t.eyebrow}
             </p>
             <h2 className="font-display font-bold text-ink text-2xl">
-              Tell us what you are solving for.
+              {t.title}
             </h2>
             <p className="text-sm text-ink-muted mt-2 max-w-2xl">
-              The more context you share, the more useful the first conversation becomes.
+              {t.subtitle}
             </p>
           </div>
 
           <div className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-brand-blue-light border border-brand-blue-mid/20 text-xs font-semibold text-brand-blue">
             <ShieldCheck size={14} />
-            Reviewed manually
+            {t.reviewedBadge}
           </div>
         </div>
       </div>
@@ -160,7 +182,7 @@ export function ContactForm() {
         {/* Identity */}
         <div>
           <p className="text-[11px] uppercase tracking-[0.18em] text-ink-light font-semibold mb-4">
-            Basic details
+            {t.basicDetails}
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -169,14 +191,15 @@ export function ContactForm() {
                 htmlFor="name"
                 className="block text-xs font-semibold text-ink-secondary mb-2 uppercase tracking-wide"
               >
-                Your name <span className="text-brand-orange">*</span>
+                {t.name} <span className="text-brand-orange">*</span>
               </label>
               <input
                 id="name"
                 name="name"
+                maxLength={100}
                 type="text"
                 required
-                placeholder="Jane Smith"
+                placeholder={t.namePlaceholder}
                 value={form.name}
                 onChange={handleChange}
                 className="w-full px-4 py-3.5 rounded-2xl border border-surface-border bg-surface-warm text-ink text-sm placeholder:text-ink-light focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/30 transition-all duration-200"
@@ -188,13 +211,14 @@ export function ContactForm() {
                 htmlFor="company"
                 className="block text-xs font-semibold text-ink-secondary mb-2 uppercase tracking-wide"
               >
-                Company
+                {t.company}
               </label>
               <input
                 id="company"
                 name="company"
+                maxLength={150}
                 type="text"
-                placeholder="Acme Inc."
+                placeholder={t.companyPlaceholder}
                 value={form.company}
                 onChange={handleChange}
                 className="w-full px-4 py-3.5 rounded-2xl border border-surface-border bg-surface-warm text-ink text-sm placeholder:text-ink-light focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/30 transition-all duration-200"
@@ -206,14 +230,15 @@ export function ContactForm() {
                 htmlFor="email"
                 className="block text-xs font-semibold text-ink-secondary mb-2 uppercase tracking-wide"
               >
-                Email address <span className="text-brand-orange">*</span>
+                {t.email} <span className="text-brand-orange">*</span>
               </label>
               <input
                 id="email"
                 name="email"
+                maxLength={254}
                 type="email"
                 required
-                placeholder="jane@company.com"
+                placeholder={t.emailPlaceholder}
                 value={form.email}
                 onChange={handleChange}
                 className="w-full px-4 py-3.5 rounded-2xl border border-surface-border bg-surface-warm text-ink text-sm placeholder:text-ink-light focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/30 transition-all duration-200"
@@ -225,13 +250,14 @@ export function ContactForm() {
                 htmlFor="website"
                 className="block text-xs font-semibold text-ink-secondary mb-2 uppercase tracking-wide"
               >
-                Website URL
+                {t.website}
               </label>
               <input
                 id="website"
                 name="website"
+                maxLength={300}
                 type="url"
-                placeholder="https://yoursite.com"
+                placeholder={t.websitePlaceholder}
                 value={form.website}
                 onChange={handleChange}
                 className="w-full px-4 py-3.5 rounded-2xl border border-surface-border bg-surface-warm text-ink text-sm placeholder:text-ink-light focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/30 transition-all duration-200"
@@ -243,7 +269,7 @@ export function ContactForm() {
         {/* Qualification */}
         <div>
           <p className="text-[11px] uppercase tracking-[0.18em] text-ink-light font-semibold mb-4">
-            Qualification
+            {t.qualification}
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -252,7 +278,7 @@ export function ContactForm() {
                 htmlFor="projectType"
                 className="block text-xs font-semibold text-ink-secondary mb-2 uppercase tracking-wide"
               >
-                What are you looking for? <span className="text-brand-orange">*</span>
+                {t.projectType} <span className="text-brand-orange">*</span>
               </label>
               <select
                 id="projectType"
@@ -263,11 +289,11 @@ export function ContactForm() {
                 className="w-full px-4 py-3.5 rounded-2xl border border-surface-border bg-surface-warm text-ink text-sm focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/30 transition-all duration-200 appearance-none cursor-pointer"
               >
                 <option value="" disabled>
-                  Select a service area...
+                  {t.projectTypePlaceholder}
                 </option>
-                {projectTypes.map((type) => (
+                {projectTypes.map((type, i) => (
                   <option key={type} value={type}>
-                    {type}
+                    {t.options.projectTypes[i]}
                   </option>
                 ))}
               </select>
@@ -278,7 +304,7 @@ export function ContactForm() {
                 htmlFor="businessType"
                 className="block text-xs font-semibold text-ink-secondary mb-2 uppercase tracking-wide"
               >
-                Business type
+                {t.businessType}
               </label>
               <select
                 id="businessType"
@@ -287,10 +313,10 @@ export function ContactForm() {
                 onChange={handleChange}
                 className="w-full px-4 py-3.5 rounded-2xl border border-surface-border bg-surface-warm text-ink text-sm focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/30 transition-all duration-200 appearance-none cursor-pointer"
               >
-                <option value="">Select business type...</option>
-                {businessTypes.map((type) => (
+                <option value="">{t.businessTypePlaceholder}</option>
+                {businessTypes.map((type, i) => (
                   <option key={type} value={type}>
-                    {type}
+                    {t.options.businessTypes[i]}
                   </option>
                 ))}
               </select>
@@ -301,7 +327,7 @@ export function ContactForm() {
                 htmlFor="budget"
                 className="block text-xs font-semibold text-ink-secondary mb-2 uppercase tracking-wide"
               >
-                Budget range
+                {t.budget}
               </label>
               <select
                 id="budget"
@@ -310,10 +336,10 @@ export function ContactForm() {
                 onChange={handleChange}
                 className="w-full px-4 py-3.5 rounded-2xl border border-surface-border bg-surface-warm text-ink text-sm focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/30 transition-all duration-200 appearance-none cursor-pointer"
               >
-                <option value="">Select budget...</option>
-                {budgets.map((item) => (
+                <option value="">{t.budgetPlaceholder}</option>
+                {budgets.map((item, i) => (
                   <option key={item} value={item}>
-                    {item}
+                    {t.options.budgets[i]}
                   </option>
                 ))}
               </select>
@@ -324,7 +350,7 @@ export function ContactForm() {
                 htmlFor="timeline"
                 className="block text-xs font-semibold text-ink-secondary mb-2 uppercase tracking-wide"
               >
-                Timeline
+                {t.timeline}
               </label>
               <select
                 id="timeline"
@@ -333,10 +359,10 @@ export function ContactForm() {
                 onChange={handleChange}
                 className="w-full px-4 py-3.5 rounded-2xl border border-surface-border bg-surface-warm text-ink text-sm focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/30 transition-all duration-200 appearance-none cursor-pointer"
               >
-                <option value="">Select timeline...</option>
-                {timelines.map((item) => (
+                <option value="">{t.timelinePlaceholder}</option>
+                {timelines.map((item, i) => (
                   <option key={item} value={item}>
-                    {item}
+                    {t.options.timelines[i]}
                   </option>
                 ))}
               </select>
@@ -347,7 +373,7 @@ export function ContactForm() {
                 htmlFor="adSpend"
                 className="block text-xs font-semibold text-ink-secondary mb-2 uppercase tracking-wide"
               >
-                Monthly ad spend
+                {t.adSpend}
               </label>
               <select
                 id="adSpend"
@@ -356,10 +382,10 @@ export function ContactForm() {
                 onChange={handleChange}
                 className="w-full px-4 py-3.5 rounded-2xl border border-surface-border bg-surface-warm text-ink text-sm focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/30 transition-all duration-200 appearance-none cursor-pointer"
               >
-                <option value="">Select spend level...</option>
-                {adSpendRanges.map((item) => (
+                <option value="">{t.adSpendPlaceholder}</option>
+                {adSpendRanges.map((item, i) => (
                   <option key={item} value={item}>
-                    {item}
+                    {t.options.adSpendRanges[i]}
                   </option>
                 ))}
               </select>
@@ -370,7 +396,7 @@ export function ContactForm() {
                 htmlFor="currentStack"
                 className="block text-xs font-semibold text-ink-secondary mb-2 uppercase tracking-wide"
               >
-                Current stack
+                {t.currentStack}
               </label>
               <select
                 id="currentStack"
@@ -379,10 +405,10 @@ export function ContactForm() {
                 onChange={handleChange}
                 className="w-full px-4 py-3.5 rounded-2xl border border-surface-border bg-surface-warm text-ink text-sm focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/30 transition-all duration-200 appearance-none cursor-pointer"
               >
-                <option value="">Select main stack...</option>
-                {currentStacks.map((item) => (
+                <option value="">{t.currentStackPlaceholder}</option>
+                {currentStacks.map((item, i) => (
                   <option key={item} value={item}>
-                    {item}
+                    {t.options.currentStacks[i]}
                   </option>
                 ))}
               </select>
@@ -393,7 +419,7 @@ export function ContactForm() {
         {/* Goals */}
         <div>
           <p className="text-[11px] uppercase tracking-[0.18em] text-ink-light font-semibold mb-4">
-            Strategic context
+            {t.strategicContext}
           </p>
 
           <div className="space-y-5">
@@ -402,14 +428,15 @@ export function ContactForm() {
                 htmlFor="goals"
                 className="block text-xs font-semibold text-ink-secondary mb-2 uppercase tracking-wide"
               >
-                Biggest objective right now <span className="text-brand-orange">*</span>
+                {t.goals} <span className="text-brand-orange">*</span>
               </label>
               <input
                 id="goals"
                 name="goals"
+                maxLength={500}
                 type="text"
                 required
-                placeholder="Example: improve ROAS, fix tracking, scale SEO, automate reporting, build internal tool..."
+                placeholder={t.goalsPlaceholder}
                 value={form.goals}
                 onChange={handleChange}
                 className="w-full px-4 py-3.5 rounded-2xl border border-surface-border bg-surface-warm text-ink text-sm placeholder:text-ink-light focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/30 transition-all duration-200"
@@ -421,14 +448,15 @@ export function ContactForm() {
                 htmlFor="message"
                 className="block text-xs font-semibold text-ink-secondary mb-2 uppercase tracking-wide"
               >
-                Context & current challenges <span className="text-brand-orange">*</span>
+                {t.message} <span className="text-brand-orange">*</span>
               </label>
               <textarea
                 id="message"
                 name="message"
+                maxLength={5000}
                 required
                 rows={6}
-                placeholder="Tell us what is happening today, what feels blocked, what tools you already use, and what outcome would make this engagement a success."
+                placeholder={t.messagePlaceholder}
                 value={form.message}
                 onChange={handleChange}
                 className="w-full px-4 py-3.5 rounded-2xl border border-surface-border bg-surface-warm text-ink text-sm placeholder:text-ink-light focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/30 transition-all duration-200 resize-none leading-relaxed"
@@ -439,15 +467,18 @@ export function ContactForm() {
 
         {formState === 'error' && (
           <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            Something went wrong while sending your request. Please try again.
+            {t.error}
           </div>
         )}
 
         {/* Footer */}
         <div className="pt-2 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
           <p className="text-xs text-ink-light leading-relaxed max-w-md">
-            By submitting this form, you agree to be contacted about your project.
-            We review requests manually and do not share your data with third parties.
+            {t.consent} {t.consentPrivacyPrefix}{' '}
+            <Link href={privacyHref} className="underline underline-offset-2 hover:text-ink transition-colors">
+              {t.consentPrivacyLink}
+            </Link>
+            .
           </p>
 
           <button
@@ -458,15 +489,21 @@ export function ContactForm() {
             {formState === 'submitting' ? (
               <>
                 <Loader2 size={15} className="animate-spin" />
-                Sending...
+                {t.sending}
               </>
             ) : (
               <>
-                Send strategy request
+                {t.submit}
                 <ArrowRight size={15} />
               </>
             )}
           </button>
+        </div>
+
+        {/* Anti-spam honeypot: invisible to visitors, robots fill it in */}
+        <div aria-hidden="true" className="absolute -left-[9999px] top-auto w-px h-px overflow-hidden">
+          <label htmlFor="fax">Fax</label>
+          <input id="fax" name="fax" type="text" tabIndex={-1} autoComplete="off" defaultValue="" />
         </div>
       </form>
     </div>

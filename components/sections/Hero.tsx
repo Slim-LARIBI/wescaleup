@@ -11,43 +11,33 @@ import {
   Workflow,
   ShieldCheck,
 } from 'lucide-react'
-
-const headlineStats = [
-  { value: '3.2×', label: 'ROAS lift' },
-  { value: '99.8%', label: 'Signal accuracy' },
-  { value: '–42%', label: 'CAC reduction' },
-]
+import type { HomeDictionary } from '@/dictionaries/en/home'
+import { localizedHref, type Locale } from '@/lib/i18n'
 
 const signalCards = [
   {
     icon: Radar,
-    title: 'Tracking Health',
-    value: '99.8%',
     meta: 'GTM · GA4 · CAPI',
     tone: 'blue',
   },
   {
     icon: MousePointerClick,
-    title: 'Paid Media Efficiency',
-    value: '3.2×',
     meta: 'Google Ads · Meta Ads',
     tone: 'orange',
   },
   {
     icon: Workflow,
-    title: 'Automation Flows',
-    value: '24/7',
     meta: 'n8n · Make · Apps Script',
     tone: 'violet',
   },
   {
     icon: ShieldCheck,
-    title: 'Server-Side Signal',
-    value: 'Live',
     meta: 'SS-GTM · CAPI · Enhanced Conv.',
     tone: 'emerald',
   },
 ]
+
+const overviewMetricColors = ['text-brand-blue', 'text-emerald-600', 'text-brand-orange']
 
 function toneClasses(tone: string) {
   switch (tone) {
@@ -78,7 +68,12 @@ function toneClasses(tone: string) {
   }
 }
 
-export function Hero() {
+interface HeroProps {
+  t: HomeDictionary['hero']
+  lang: Locale
+}
+
+export function Hero({ t, lang }: HeroProps) {
   return (
     <section className="relative overflow-hidden bg-hero-mesh pt-20 lg:pt-20 pb-10 lg:pb-12">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -102,10 +97,10 @@ export function Hero() {
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-surface-border shadow-card text-xs font-semibold text-ink-secondary tracking-wide">
                 <span className="flex items-center gap-1">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse-slow" />
-                  <span className="text-emerald-600 font-bold">Data-Driven</span>
+                  <span className="text-emerald-600 font-bold">{t.badgeHighlight}</span>
                 </span>
                 <span className="text-surface-border">|</span>
-                Performance Marketing · Tracking · Automation
+                {t.badgeText}
               </span>
             </motion.div>
 
@@ -120,9 +115,9 @@ export function Hero() {
                 letterSpacing: '-0.055em',
               }}
             >
-              We build
-              <span className="block">growth systems.</span>
-              <span className="block text-gradient-brand">Not just campaigns.</span>
+              {t.titleLine1}{' '}
+              <span className="block">{t.titleLine2}</span>{' '}
+              <span className="block text-gradient-brand">{t.titleLine3}</span>
             </motion.h1>
 
             <motion.p
@@ -131,9 +126,7 @@ export function Hero() {
               transition={{ duration: 0.55, delay: 0.15 }}
               className="max-w-xl text-ink-muted text-base lg:text-[1.12rem] leading-relaxed mb-6"
             >
-              Wescaleup helps ambitious brands scale through advanced tracking,
-              analytics, paid media, technical SEO, and automation systems built
-              for clarity, efficiency, and measurable growth.
+              {t.intro}
             </motion.p>
 
             <motion.div
@@ -143,18 +136,18 @@ export function Hero() {
               className="flex flex-wrap gap-4 mb-6"
             >
               <Link
-                href="/contact"
+                href={localizedHref(lang, '/contact')}
                 className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full bg-brand-blue text-white font-semibold text-base shadow-button hover:bg-brand-blue-dark hover:shadow-button-hover transition-all duration-200 ease-premium group"
               >
-                Book a strategy call
+                {t.primaryCta}
                 <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
               </Link>
 
               <Link
-                href="/services"
+                href={localizedHref(lang, '/services')}
                 className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full bg-white text-ink font-semibold text-base border border-surface-border hover:border-brand-blue-mid hover:bg-brand-blue-light hover:text-brand-blue transition-all duration-200 ease-premium"
               >
-                View our services
+                {t.secondaryCta}
               </Link>
             </motion.div>
 
@@ -164,7 +157,7 @@ export function Hero() {
               transition={{ duration: 0.45, delay: 0.3 }}
               className="grid grid-cols-3 gap-3 max-w-lg"
             >
-              {headlineStats.map((stat) => (
+              {t.stats.map((stat) => (
                 <div
                   key={stat.label}
                   className="rounded-2xl border border-surface-border bg-white/90 backdrop-blur-sm px-4 py-4 shadow-card"
@@ -187,7 +180,7 @@ export function Hero() {
 
   <div className="leading-tight">
     <p className="text-sm text-ink">
-      Founded by{' '}
+      {t.foundedBy}{' '}
       <a
         href="https://laribislim.com"
         target="_blank"
@@ -198,7 +191,7 @@ export function Hero() {
       </a>
     </p>
     <p className="text-sm text-ink-muted">
-      Ecommerce, analytics & automation operator
+      {t.founderRole}
     </p>
   </div>
 </motion.div>
@@ -221,15 +214,15 @@ export function Hero() {
                   <div className="flex items-center justify-between mb-5">
                     <div>
                       <p className="text-xs uppercase tracking-[0.22em] text-ink-light font-semibold">
-                        Growth Command Layer
+                        {t.panelEyebrow}
                       </p>
                       <h3 className="text-xl font-display font-bold text-ink mt-1">
-                        Tracking. Ads. Analytics. Automation.
+                        {t.panelTitle}
                       </h3>
                     </div>
                     <div className="hidden sm:flex items-center gap-2 rounded-full border border-surface-border bg-white px-3 py-1.5 shadow-card">
                       <Activity size={14} className="text-emerald-600" />
-                      <span className="text-xs font-semibold text-ink-secondary">Systems live</span>
+                      <span className="text-xs font-semibold text-ink-secondary">{t.systemsLive}</span>
                     </div>
                   </div>
 
@@ -238,30 +231,24 @@ export function Hero() {
                     <div className="flex items-center justify-between mb-3">
                       <div>
                         <p className="text-xs text-ink-light uppercase tracking-[0.18em] font-semibold">
-                          Signal & Performance Overview
+                          {t.overviewTitle}
                         </p>
                         <p className="text-sm text-ink-muted mt-1">
-                          Cleaner attribution, stronger optimization, better decisions.
+                          {t.overviewText}
                         </p>
                       </div>
                       <div className="rounded-full border border-brand-blue-mid/20 bg-brand-blue-light px-3 py-1 text-xs font-semibold text-brand-blue">
-                        Live stack
+                        {t.liveStack}
                       </div>
                     </div>
 
                     <div className="grid grid-cols-3 gap-3 mb-4">
-                      <div className="rounded-xl bg-white border border-surface-border p-3 shadow-card">
-                        <div className="text-xs text-ink-light mb-1">ROAS</div>
-                        <div className="text-lg font-bold text-brand-blue">3.2×</div>
-                      </div>
-                      <div className="rounded-xl bg-white border border-surface-border p-3 shadow-card">
-                        <div className="text-xs text-ink-light mb-1">Signal Match</div>
-                        <div className="text-lg font-bold text-emerald-600">99.8%</div>
-                      </div>
-                      <div className="rounded-xl bg-white border border-surface-border p-3 shadow-card">
-                        <div className="text-xs text-ink-light mb-1">CAC</div>
-                        <div className="text-lg font-bold text-brand-orange">–42%</div>
-                      </div>
+                      {t.overviewMetrics.map((metric, i) => (
+                        <div key={metric.label} className="rounded-xl bg-white border border-surface-border p-3 shadow-card">
+                          <div className="text-xs text-ink-light mb-1">{metric.label}</div>
+                          <div className={`text-lg font-bold ${overviewMetricColors[i]}`}>{metric.value}</div>
+                        </div>
+                      ))}
                     </div>
                   </div>
 
@@ -279,9 +266,10 @@ export function Hero() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {signalCards.map((card, index) => {
                       const tone = toneClasses(card.tone)
+                      const text = t.signalCards[index]
                       return (
                         <motion.div
-                          key={card.title}
+                          key={card.meta}
                           initial={{ opacity: 0, y: 16 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.28 + index * 0.08, duration: 0.45 }}
@@ -296,8 +284,8 @@ export function Hero() {
                             </span>
                           </div>
 
-                          <div className="text-sm text-ink-secondary font-medium mb-1">{card.title}</div>
-                          <div className="text-2xl font-bold text-ink tracking-tight">{card.value}</div>
+                          <div className="text-sm text-ink-secondary font-medium mb-1">{text.title}</div>
+                          <div className="text-2xl font-bold text-ink tracking-tight">{text.value}</div>
                         </motion.div>
                       )
                     })}
@@ -316,8 +304,8 @@ export function Hero() {
                   <BarChart3 size={18} className="text-brand-blue" />
                 </div>
                 <div>
-                  <div className="text-xs text-ink-light">Measurement stack</div>
-                  <div className="text-sm font-semibold text-ink">Built for scale</div>
+                  <div className="text-xs text-ink-light">{t.badgeEyebrow}</div>
+                  <div className="text-sm font-semibold text-ink">{t.badgeTitle}</div>
                 </div>
               </motion.div>
             </motion.div>

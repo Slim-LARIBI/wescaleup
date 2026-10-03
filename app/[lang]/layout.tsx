@@ -6,7 +6,9 @@ import { Navbar } from '@/components/layout/Navbar'
 import { FloatingCTA } from '@/components/layout/FloatingCTA'
 import { Footer } from '@/components/layout/Footer'
 import { getDictionary } from '@/dictionaries'
-import { isLocale, locales, SITE_URL } from '@/lib/i18n'
+import { isLocale, localizedHref, locales, SITE_URL, translatePath } from '@/lib/i18n'
+import { CONSENT_INIT_SCRIPT } from '@/lib/consent'
+import { CookieConsent } from '@/components/consent/CookieConsent'
 
 // Self-hosted fonts (served from our own domain, nothing is downloaded from Google at build time).
 // The --font-plus-jakarta and --font-inter variables are defined in globals.css.
@@ -58,6 +60,10 @@ export default function RootLayout({
 
   return (
     <html lang={lang}>
+      <head>
+        {/* Google Consent Mode v2: "denied" defaults + stored choice, before GTM loads */}
+        <script id="consent-default" dangerouslySetInnerHTML={{ __html: CONSENT_INIT_SCRIPT }} />
+      </head>
       <body className="font-sans antialiased">
         {GTM_ID && (
           <>
@@ -78,6 +84,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </noscript>
           </>
         )}
+        {/* First in the page so keyboard users reach the banner first */}
+        <CookieConsent
+          t={common.cookies}
+          privacyHref={localizedHref(lang, translatePath('/privacy', 'en', lang))}
+        />
         <Navbar t={common.nav} switcherLabel={common.languageSwitcher.label} lang={lang} />
         <main>{children}</main>
         <Footer t={common.footer} serviceLabels={common.nav.serviceLinks} lang={lang} />

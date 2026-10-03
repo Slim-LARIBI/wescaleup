@@ -10,6 +10,11 @@
     --font-inter: 'Inter';
   }
 
+  /* Cookie banner open: hide the floating "Book a call" button on mobile (it would overlap) */
+  body[data-cookie-banner='open'] .floating-cta {
+    @apply hidden lg:block;
+  }
+
   html {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;

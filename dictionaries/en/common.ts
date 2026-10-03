@@ -50,6 +50,44 @@ export const common = {
     rights: 'Wescaleup. All rights reserved.',
     privacy: 'Privacy Policy',
     terms: 'Terms of Service',
+    cookieSettings: 'Cookie settings',
+  },
+  cookies: {
+    bannerTitle: 'Your privacy',
+    bannerText:
+      'We use cookies to measure our audience and, with your consent, to measure and personalize our advertising campaigns. Cookies needed for the website to work are always active. You can change your mind at any time via "Cookie settings" at the bottom of the page.',
+    /** Shorter text and labels used on mobile */
+    bannerTextShort: 'With your consent, we use cookies to measure our audience and the performance of our ads.',
+    privacyLink: 'Privacy policy',
+    acceptAll: 'Accept all',
+    rejectAll: 'Reject all',
+    customize: 'Customize',
+    acceptShort: 'Accept',
+    rejectShort: 'Reject',
+    customizeShort: 'Customize',
+    panelTitle: 'Cookie settings',
+    panelIntro:
+      'Choose which cookies you accept. Optional categories are off until you turn them on, and you can change your choices at any time.',
+    close: 'Close without saving',
+    alwaysActive: 'Always active',
+    save: 'Save my choices',
+    categories: {
+      necessary: {
+        title: 'Necessary cookies',
+        description:
+          'Required for the website to work and to remember your cookie choices. They cannot be turned off.',
+      },
+      analytics: {
+        title: 'Audience measurement',
+        description:
+          'Google Analytics 4, Microsoft Clarity, and Hotjar help us understand how the website is used (pages visited, navigation) so we can improve it.',
+      },
+      marketing: {
+        title: 'Marketing',
+        description:
+          'Google Ads, Meta Pixel / Conversions API, and LinkedIn Insight Tag measure the performance of our ads and let us show relevant ads to people who visited the website.',
+      },
+    },
   },
   notFound: {
     title: 'Page not found',

@@ -52,6 +52,44 @@ export const common: CommonDictionary = {
     rights: 'Wescaleup. Tous droits réservés.',
     privacy: 'Politique de confidentialité',
     terms: 'Mentions légales',
+    cookieSettings: 'Gérer les cookies',
+  },
+  cookies: {
+    bannerTitle: 'Votre vie privée',
+    bannerText:
+      'Nous utilisons des cookies pour mesurer l’audience du site et, avec votre accord, pour mesurer et personnaliser nos campagnes publicitaires. Les cookies nécessaires au fonctionnement du site sont toujours actifs. Vous pouvez changer d’avis à tout moment via « Gérer les cookies » en bas de page.',
+    bannerTextShort:
+      'Avec votre accord, nous utilisons des cookies pour mesurer l’audience du site et l’efficacité de nos publicités.',
+    privacyLink: 'Politique de confidentialité',
+    acceptAll: 'Tout accepter',
+    rejectAll: 'Tout refuser',
+    customize: 'Personnaliser',
+    acceptShort: 'Accepter',
+    rejectShort: 'Refuser',
+    customizeShort: 'Personnaliser',
+    panelTitle: 'Gérer les cookies',
+    panelIntro:
+      'Choisissez les cookies que vous acceptez. Les catégories facultatives restent désactivées tant que vous ne les activez pas, et vous pouvez modifier vos choix à tout moment.',
+    close: 'Fermer sans enregistrer',
+    alwaysActive: 'Toujours actifs',
+    save: 'Enregistrer mes choix',
+    categories: {
+      necessary: {
+        title: 'Cookies nécessaires',
+        description:
+          'Indispensables au fonctionnement du site et à la mémorisation de vos choix en matière de cookies. Ils ne peuvent pas être désactivés.',
+      },
+      analytics: {
+        title: 'Mesure d’audience',
+        description:
+          'Google Analytics 4, Microsoft Clarity et Hotjar nous aident à comprendre comment le site est utilisé (pages consultées, navigation) afin de l’améliorer.',
+      },
+      marketing: {
+        title: 'Marketing',
+        description:
+          'Google Ads, Meta Pixel / Conversions API et LinkedIn Insight Tag mesurent l’efficacité de nos publicités et nous permettent d’afficher des annonces pertinentes aux personnes ayant visité le site.',
+      },
+    },
   },
   notFound: {
     title: 'Page introuvable',

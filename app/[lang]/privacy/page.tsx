@@ -94,7 +94,7 @@ const sections: LegalSection[] = [
     ],
     after: [
       'These tools are only enabled after you give your consent through the cookie banner. Without your consent, no analytics or marketing cookies are placed.',
-      'You can change your choices at any time via the "Manage cookies" link at the bottom of the page.',
+      'You can change your choices at any time via the "Cookie settings" link at the bottom of the page.',
     ],
   },
   {

@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ArrowRight, Mail, MapPin, Linkedin } from 'lucide-react'
 import type { CommonDictionary } from '@/dictionaries/en/common'
 import { localizedHref, translatePath, type Locale } from '@/lib/i18n'
+import { CookieSettingsButton } from '@/components/consent/CookieSettingsButton'
 
 interface FooterProps {
   t: CommonDictionary['footer']
@@ -138,6 +139,10 @@ export function Footer({ t, serviceLabels, lang }: FooterProps) {
             <Link href={localizedHref(lang, translatePath('/terms', 'en', lang))} className="text-xs text-ink-light hover:text-white transition-colors">
               {t.terms}
             </Link>
+            <CookieSettingsButton
+              label={t.cookieSettings}
+              className="text-xs text-ink-light hover:text-white transition-colors"
+            />
           </div>
         </div>
       </div>

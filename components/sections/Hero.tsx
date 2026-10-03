@@ -37,6 +37,12 @@ const signalCards = [
   },
 ]
 
+// French words are longer: a smaller title keeps it on 3–4 lines with the CTA above the fold
+const titleFontSize: Record<Locale, string> = {
+  en: 'clamp(2.6rem, 5.2vw, 4.9rem)',
+  fr: 'clamp(2.4rem, 4vw, 3.3rem)',
+}
+
 const overviewMetricColors = ['text-brand-blue', 'text-emerald-600', 'text-brand-orange']
 
 function toneClasses(tone: string) {
@@ -110,7 +116,7 @@ export function Hero({ t, lang }: HeroProps) {
               transition={{ duration: 0.6, delay: 0.05 }}
               className="font-display font-bold text-ink mb-5"
               style={{
-                fontSize: 'clamp(2.6rem, 5.2vw, 4.9rem)',
+                fontSize: titleFontSize[lang],
                 lineHeight: '0.92',
                 letterSpacing: '-0.055em',
               }}
